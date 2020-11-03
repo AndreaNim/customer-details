@@ -7,5 +7,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface AddressRepository extends JpaRepository<Address, Integer> {
     Address findCustomerByEmail(String email);
 
-    Address findAddressByCustomer_id(int customer_id);
 }

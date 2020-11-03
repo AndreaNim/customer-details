@@ -34,8 +34,5 @@ public class AddressService {
     public Address AddressByEmail(String email) {
         return addressRepository.findCustomerByEmail(email);
     }
-    public Address AddresByCustomerIg(Integer customerId) {
-        return addressRepository.findAddressByCustomer_id(customerId);
-    }
 
 }

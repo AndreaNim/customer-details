@@ -130,11 +130,11 @@
         console.log(Customer[0]);
         console.log(Customer[0].firstName);
         localStorage.setItem("customerId",Customer[0].customerId);
-        document.getElementById("userId").innerHTML = Customer[0].customerId;
-        document.getElementById("firstName").innerHTML = Customer[0].firstName;
-        document.getElementById("lastName").innerHTML = Customer[0].lastName;
-        document.getElementById("customer_tele_number").innerHTML = Customer[0].mobile_number;
-        document.getElementById("email").innerHTML = email;
+        document.getElementById("userId").value = Customer[0].customerId;
+        document.getElementById("firstName").value = Customer[0].firstName;
+        document.getElementById("lastName").valueL = Customer[0].lastName;
+        document.getElementById("customer_tele_number").value = Customer[0].mobile_number;
+        document.getElementById("email").value = email;
 
     }
     const email = localStorage.getItem("loginemail");

@@ -24,7 +24,6 @@
 
 <body>
 
-<body>
 
 <div class="container">
     <h2 style="color: steelblue;">Login </h2>
@@ -53,7 +52,7 @@
 </div>
 
 
-<script>
+    <script>
     const loginform = document.getElementById("loginform");
 
     loginform.addEventListener("submit", (event) => {
@@ -91,10 +90,10 @@
                 document.getElementById("message").innerHTML = error.message;
                 window.alert(error.message);
             } else {
-                error.then(resp => {
+                error.then(resp => {console.log("error")
                     console.log("error")
                     console.log(resp.message)
-                    window.alert(resp.message);
+                     window.alert(resp.message);
                     document.getElementById("message").innerHTML = resp.message;
                 })
             }
@@ -103,7 +102,7 @@
     });
 
 
-</script>
-</body>
+    </script>
+
 </body>
 </html>
