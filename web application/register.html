@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <title>Customer entry System</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<nav class="navbar navbar-inverse">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="#">EASYfees</a>
+    </div>
+
+    <ul class="nav navbar-nav navbar-right">
+      <li><a id="useremail" href="login.html"><span class="glyphicon glyphicon-user"></span> Sign in </a></li>
+
+    </ul>
+  </div>
+</nav>
+
+<body>
+
+
+  <div class="container">
+    <h2 style="color:steelblue;">Registration </h2>
+    <form action="/action_page.php" id="registerform">
+      <div class="form-group">
+        <label for="firstName">First Name:</label>
+        <input type="firstName" class="form-control" id="firstName" placeholder="Enter First Name" name="firstName" required>
+      </div>
+      <div class="form-group">
+        <label for="lastName">Last Name:</label>
+        <input type="lastName" class="form-control" id="lastName" placeholder="Enter Last Name" name="lastName" required>
+      </div>
+      <div class="form-group">
+        <label for="customer_tele_number">Telephone number:</label>
+        <input type="customer_tele_number" class="form-control" id="customer_tele_number" placeholder="Enter Mobile Number"
+          name="customer_tele_number" required>
+      </div>
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="pwd">Password:</label>
+        <input type="password" class="form-control" id="pwd" placeholder="Enter password" name="pwd" required>
+      </div>
+
+      <button type="submit" class="btn btn-default" style="background-color:steelblue;">Submit</button>
+      <div class="form-group">
+        <br>
+        <h3 id="message"></h3>
+      </div>
+    </form>
+  </div>
+
+
+  <script>
+    const registerform = document.getElementById("registerform");
+    registerform.addEventListener("submit", (event) => {
+      event.preventDefault();
+      const firstName = document.getElementById("firstName").value;
+      const lastName = document.getElementById("lastName").value;
+      const customer_tele_number = document.getElementById("customer_tele_number").value;
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("pwd").value;
+
+      fetch("http://localhost:8080/customers/register", {
+        method: "POST",
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          "firstName": firstName,
+          "lastName": lastName,
+          "mobile_number": customer_tele_number,
+          "email": email,
+          "password": password
+        })
+      }).then(res => {
+        console.log(res)
+        if (!res.ok) {
+          return Promise.reject(res.json())
+        }
+        return res.json();
+      })
+        .then(data => {
+          document.getElementById("message").innerHTML = ' Registration is success';
+          window.alert(' Registration is success');
+          window.location.replace("login.html")
+        }).catch((error) => {
+          if (error.message) {
+            window.alert(error.message);
+            document.getElementById("message").innerHTML = error.message;
+
+          } else {
+            error.then(resp => {
+              console.log("error")
+              console.log(resp.message)
+              window.alert(resp.message);
+              document.getElementById("message").innerHTML = resp.message;
+            })
+          }
+
+        })
+    });
+
+
+  </script>
+</body>
+
+</html>

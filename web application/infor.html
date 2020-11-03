@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <title>Customer entry System</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+</head>
+<nav class="navbar navbar-inverse">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <a class="navbar-brand" href="#">EASYfees</a>
+        </div>
+
+        <ul class="nav navbar-nav navbar-right">
+            <li><a id="useremail" href="login.html"><span class="glyphicon glyphicon-user"></span> Sign in </a></li>
+            <li><a id="userId" href="login.html"><span class="glyphicon glyphicon-user"></span>  </a></li>
+        </ul>
+    </div>
+</nav>
+
+<body onload="FunctionOnload()">
+
+
+<div class="container">
+    <h2 style="color:steelblue;">Customer Contact Information </h2>
+    <form action="/action_page.php" id="Informationform">
+        <div class="form-group">
+            <label for="firstName">First Name:</label>
+            <input type="firstName" class="form-control" id="firstName" placeholder="Enter First Name" name="firstName" required>
+        </div>
+        <div class="form-group">
+            <label for="lastName">Last Name:</label>
+            <input type="lastName" class="form-control" id="lastName" placeholder="Enter Last Name" name="lastName" required>
+        </div>
+        <div class="form-group">
+            <label for="customer_tele_number">Mobile number:</label>
+            <input type="customer_tele_number" class="form-control" id="customer_tele_number" placeholder="Enter Mobile number"
+                   name="customer_tele_number" required>
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" class="form-control" id="email" placeholder="Enter email" name="email" required>
+        </div>
+        <div class="form-group">
+            <label for="phone_number">Telephone Number:</label>
+            <input type="phone_number" class="form-control" id="phone_number" placeholder="Enter Phone Number " name="phone_number" required>
+        </div>
+        <div class="form-group">
+            <label for="date_of_birth">Date of Birth:</label>
+            <input type="date_of_birth" class="form-control" id="date_of_birth" placeholder="Enter Date of Birth " name="date_of_birth" required>
+        </div>
+        <button type="submit" class="btn btn-default" style="background-color:steelblue;">Submit</button>
+
+    </form>
+        <form action="/action_page.php" id="Addressform">
+        <div class="form-group">
+            <h3 style="color:steelblue;">Customer Address </h3>
+            <label for="street_address">Street Address:</label>
+            <input type="street_address" class="form-control" id="street_address" placeholder="Enter Street Address " name="street_address" required>
+            <label for="street_address2">Street Address 2:</label>
+            <input type="street_address2" class="form-control" id="street_address2" placeholder="Enter Street Address 2 " name="street_address2" required>
+
+            <label for="city">City:</label>
+            <input type="city" class="form-control" id="city" placeholder="Enter City " name="city" required>
+            <div>
+            <label for="state">State:</label>
+            <input type="state" class="form-control" id="state" placeholder="Enter State" name="state" required>
+            <label for="zip_code">Zip Code:</label>
+            <input type="zip_code" class="form-control" id="zip_code" placeholder="Enter Zip Code " name="zip_code" required>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-default" style="background-color:steelblue;">Submit</button>
+
+        <div class="form-group">
+            <br>
+            <h3 id="message"></h3>
+        </div>
+    </form>
+    <form action="" id="deleteform">
+        <button type="submit" class="btn btn-default" style="background-color:steelblue;">Delete User</button>
+    </form>
+</div>
+
+
+<script>
+    const customerId=localStorage.getItem("customerId");
+    function FunctionOnload() {
+        const email = localStorage.getItem("loginemail");
+
+        document.getElementById("useremail").innerHTML = email;
+        fetch("http://localhost:8080/customers", {
+            method: "GET",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(res => {
+            console.log(res)
+            if (!res.ok) {
+                return Promise.reject(res.json())
+            }
+            return res.json();
+        })
+            .then(data => {
+                console.log(data)
+                addValuesFromJSON(data)
+                document.getElementById("message").innerHTML = 'THANK YOU';
+            }).catch((error) => {
+            if (error.message) {
+                document.getElementById("message").innerHTML = error.message;
+                window.alert(error.message);
+                window.location.replace("login.html")
+            } else {
+                error.then(resp => {
+                    console.log("error")
+                    console.log(resp.message)
+                    window.alert(resp.message);
+                    document.getElementById("message").innerHTML = resp.message;
+                })
+            }
+
+        })
+    }
+    function addValuesFromJSON(Customer) {
+        console.log(Customer)
+        console.log(Customer[0]);
+        console.log(Customer[0].firstName);
+        localStorage.setItem("customerId",Customer[0].customerId);
+        document.getElementById("userId").innerHTML = Customer[0].customerId;
+        document.getElementById("firstName").innerHTML = Customer[0].firstName;
+        document.getElementById("lastName").innerHTML = Customer[0].lastName;
+        document.getElementById("customer_tele_number").innerHTML = Customer[0].mobile_number;
+        document.getElementById("email").innerHTML = email;
+
+    }
+    const email = localStorage.getItem("loginemail");
+    console.log(email);
+    // const customerId = localStorage.getItem("customerId");
+    console.log(customerId);
+    const Informationform = document.getElementById("Informationform");
+    const jwt = localStorage.getItem("token");
+    console.log(jwt)
+    console.log('Bearer' + " " + jwt)
+    Informationform.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const firstName = document.getElementById("firstName").value;
+        const lastName = document.getElementById("lastName").value;
+        const customer_tele_number = document.getElementById("customer_tele_number").value;
+        const email = document.getElementById("email").value;
+        const phone_number = document.getElementById("phone_number").value;
+        const street_address=document.getElementById("street_address").value;
+        const street_address2 = document.getElementById("street_address2").value;
+        const city = document.getElementById("city").value;
+        const state = document.getElementById("state").value;
+        const zip_code = document.getElementById("zip_code").value;
+        fetch("http://localhost:8080/customers/", {
+            method: "PUT",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "firstName": firstName,
+                "lastName": lastName,
+                "mobile_number": customer_tele_number,
+                "email": email,
+                "phone_number": phone_number,
+                "date_of_birth": "2012-12-01"
+
+            })
+        }).then(res => {
+            console.log(res)
+            if (!res.ok) {
+                return Promise.reject(res.text())
+            }
+            return res.text();
+        })
+            .then(data => {
+                document.getElementById("message").innerHTML = 'Contact information is saved.';
+                window.alert(' Contact information is saved');
+                window.location.replace("login.html")
+            }).catch((error) => {
+            if (error.message) {
+                window.alert(error.message);
+                document.getElementById("message").innerHTML = error.message;
+
+            } else {
+                error.then(resp => {
+                    console.log("error")
+                    console.log(resp.message)
+                    window.alert(resp.message);
+                    document.getElementById("message").innerHTML = resp.message;
+                })
+            }
+
+        })
+    });
+    deleteform.addEventListener("submit", (event) => {
+        fetch("http://localhost:8080/customers/"+ customerId, {
+            method: "DELETE",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        }).then(res => {
+            console.log(res)
+            if (!res.ok) {
+                return Promise.reject(res.json())
+            }
+            return res.json();
+        })
+            .then(data => {
+                document.getElementById("message").innerHTML = ' Customer has been deleted';
+                window.alert('Customer has been deleted');
+                window.location.replace("login.html")
+            }).catch((error) => {
+            if (error.message) {
+                window.alert(error.message);
+                document.getElementById("message").innerHTML = error.message;
+
+            } else {
+                error.then(resp => {
+                    console.log("error")
+                    console.log(resp.message)
+                    window.alert(resp.message);
+                    document.getElementById("message").innerHTML = resp.message;
+                })
+            }
+
+        })
+    });
+    const Addressform = document.getElementById("Addressform");
+    Addressform.addEventListener("submit", (event) => {
+        event.preventDefault();
+        const street_address=document.getElementById("street_address").value;
+        const street_address2 = document.getElementById("street_address2").value;
+        const city = document.getElementById("city").value;
+        const state = document.getElementById("state").value;
+        const zip_code = document.getElementById("zip_code").value;
+        const jwt = localStorage.getItem("token");
+        console.log(jwt)
+        console.log('Bearer' + " " + jwt)
+        fetch("http://localhost:8080/address/", {
+            method: "POST",
+            headers: {
+                'Authorization': 'Bearer' + " " + jwt,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                "street_address":street_address,
+                "street_address2":street_address2,
+                "email": email,
+                "city":city,
+                "state":state,
+                "zip_code":zip_code
+
+            })
+        }).then(res => {
+            console.log(res)
+            if (!res.ok) {
+                return Promise.reject(res.text())
+            }
+            return res.text();
+        })
+            .then(data => {
+                document.getElementById("message").innerHTML = 'Address information is saved.';
+                window.alert(' Address information is saved.');
+                window.location.replace("login.html")
+            }).catch((error) => {
+            if (error.message) {
+                window.alert(error.message);
+                document.getElementById("message").innerHTML = error.message;
+
+            } else {
+                error.then(resp => {
+                    console.log("error")
+                    console.log(resp.message)
+                    window.alert(resp.message);
+                    document.getElementById("message").innerHTML = resp.message;
+                })
+            }
+
+        })
+    });
+
+
+</script>
+</body>
+
+</html>
