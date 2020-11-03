@@ -125,24 +125,68 @@
 
         })
     }
+    const jwt = localStorage.getItem("token");
+    console.log(jwt)
+    console.log('Bearer' + " " + jwt)
+    fetch("http://localhost:8080/address", {
+        method: "GET",
+        headers: {
+            'Authorization': 'Bearer' + " " + jwt,
+            'Content-Type': 'application/json'
+        },
+    }).then(res => {
+        console.log(res)
+        if (!res.ok) {
+            return Promise.reject(res.json())
+        }
+        return res.json();
+    })
+        .then(data => {
+            console.log(data)
+            addAddressValuesFromJSON(data)
+            document.getElementById("message").innerHTML = 'THANK YOU';
+        }).catch((error) => {
+        if (error.message) {
+            document.getElementById("message").innerHTML = error.message;
+            window.alert(error.message);
+            window.location.replace("login.html")
+        } else {
+            error.then(resp => {
+                console.log("error")
+                console.log(resp.message)
+                window.alert(resp.message);
+                document.getElementById("message").innerHTML = resp.message;
+            })
+        }
+
+    })
+    function addAddressValuesFromJSON(Address){
+        console.log(Address)
+        console.log(Address[0]);
+        console.log(Address[0].street_address);
+        document.getElementById("street_address").value = Address[0].street_address;
+        document.getElementById("street_address2").value = Address[0].street_address2;
+        document.getElementById("city").value = Address[0].city;
+        document.getElementById("state").value = Address[0].state;
+        document.getElementById("zip_code").value = Address[0].zip_code;
+    }
     function addValuesFromJSON(Customer) {
         console.log(Customer)
         console.log(Customer[0]);
         console.log(Customer[0].firstName);
+        console.log(Customer[0].lastName);
         localStorage.setItem("customerId",Customer[0].customerId);
         document.getElementById("userId").value = Customer[0].customerId;
         document.getElementById("firstName").value = Customer[0].firstName;
-        document.getElementById("lastName").valueL = Customer[0].lastName;
+        document.getElementById("lastName").value = Customer[0].lastName;
         document.getElementById("customer_tele_number").value = Customer[0].mobile_number;
         document.getElementById("email").value = email;
 
     }
     const email = localStorage.getItem("loginemail");
     console.log(email);
-    // const customerId = localStorage.getItem("customerId");
     console.log(customerId);
     const Informationform = document.getElementById("Informationform");
-    const jwt = localStorage.getItem("token");
     console.log(jwt)
     console.log('Bearer' + " " + jwt)
     Informationform.addEventListener("submit", (event) => {
@@ -181,7 +225,7 @@
             .then(data => {
                 document.getElementById("message").innerHTML = 'Contact information is saved.';
                 window.alert(' Contact information is saved');
-                window.location.replace("login.html")
+                window.location.replace("infor.html")
             }).catch((error) => {
             if (error.message) {
                 window.alert(error.message);
