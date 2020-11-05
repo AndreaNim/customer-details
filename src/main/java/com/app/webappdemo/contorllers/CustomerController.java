@@ -3,6 +3,7 @@ package com.app.webappdemo.contorllers;
 import com.app.webappdemo.Constants.Constants;
 import com.app.webappdemo.exceptions.AuthException;
 import com.app.webappdemo.exceptions.NotFoundException;
+import com.app.webappdemo.model.Address;
 import com.app.webappdemo.model.Customer;
 import com.app.webappdemo.services.AddressService;
 import com.app.webappdemo.services.CustomerService;
@@ -121,12 +122,40 @@ public class CustomerController {
         try {
             Customer existCustomer = customerService.getCustomer(id);
             if (existCustomer != null) {
-                customerService.deleteCustomer(id);
+
+                Address existAddress=  addressService.AddressByEmail(existCustomer.getEmail());
+                if (existAddress!=null){
+                    int addressId=existAddress.getAddress_id();
+                    if(addressId>0){
+                        deleteAddressById(addressId);
+                        customerService.deleteCustomer(id);
+                        System.out.println("sucessfully deleted");
+                        return new ResponseEntity<>(HttpStatus.OK);
+                    }
+                    throw new AuthException("Address is not found");
+                }
+                else
+                    customerService.deleteCustomer(id);
+                    System.out.println("sucessfully deleted");
+                    return new ResponseEntity<>(HttpStatus.OK);
+            } else {
+                throw new AuthException("Customer is not found");
+            }
+        } catch (NoSuchElementException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+
+    }
+
+    public ResponseEntity<?> deleteAddressById(Integer id) {
+        try {
+            Address existAddress = addressService.getAddress(id);
+            if (existAddress != null) {
                 addressService.deleteAddress(id);
                 System.out.println("sucessfully deleted");
                 return new ResponseEntity<>(HttpStatus.OK);
             } else {
-                throw new AuthException("Customer is not found");
+                throw new AuthException("Address is not found");
             }
         } catch (NoSuchElementException e) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

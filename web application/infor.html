@@ -143,7 +143,7 @@
     })
         .then(data => {
             console.log(data)
-            addAddressValuesFromJSON(data)
+            // addAddressValuesFromJSON(data)
             document.getElementById("message").innerHTML = 'THANK YOU';
         }).catch((error) => {
         if (error.message) {
@@ -161,14 +161,20 @@
 
     })
     function addAddressValuesFromJSON(Address){
-        console.log(Address)
-        console.log(Address[0]);
-        console.log(Address[0].street_address);
-        document.getElementById("street_address").value = Address[0].street_address;
-        document.getElementById("street_address2").value = Address[0].street_address2;
-        document.getElementById("city").value = Address[0].city;
-        document.getElementById("state").value = Address[0].state;
-        document.getElementById("zip_code").value = Address[0].zip_code;
+        if(isEmpty(Address)){
+            window.location.replace("infor.html")
+        }
+        else{
+            console.log(Address)
+            console.log(Address[0]);
+            console.log(Address[0].street_address);
+            document.getElementById("street_address").value = Address[0].street_address;
+            document.getElementById("street_address2").value = Address[0].street_address2;
+            document.getElementById("city").value = Address[0].city;
+            document.getElementById("state").value = Address[0].state;
+            document.getElementById("zip_code").value = Address[0].zip_code;
+        }
+
     }
     function addValuesFromJSON(Customer) {
         console.log(Customer)

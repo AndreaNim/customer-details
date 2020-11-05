@@ -19,9 +19,9 @@ public class AddressService {
         return addressRepository.findAll();
     }
 
-    public void saveAddressDetails(Address customer) {
+    public void saveAddressDetails(Address address) {
 
-        addressRepository.save(customer);
+        addressRepository.save(address);
     }
 
     public Address getAddress(Integer id) {
@@ -34,5 +34,6 @@ public class AddressService {
     public Address AddressByEmail(String email) {
         return addressRepository.findCustomerByEmail(email);
     }
+
 
 }
